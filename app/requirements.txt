@@ -1,0 +1,4 @@
+SQLAlchemy==2.0.31
+numpy
+pandas
+datetime
