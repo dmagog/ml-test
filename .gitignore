@@ -1,0 +1,5 @@
+*.env
+
+db/
+rabbitmq/
+models/__pycache__/
