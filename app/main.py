@@ -1,48 +1,62 @@
-from models.user import User
-from models.models import UsableModel
+from models.user import *
+from models.models import *
+from models.billing import *
 import random
+
+from database.config import get_settings
+from database.database import get_session, init_db, engine
+from services.crud.user import *
+from services.crud.billing import *
+from services.crud.models import *
+from sqlmodel import Session
+import datetime
+
 
 
 if __name__ == "__main__":
 
-    # Инициируем модели
-    CurrModel_1 = UsableModel('', 'Убиватор-3000', '1.01', 'Офигенская модель, прям всем советую только ее',
-                            price = 1)
+    settings = get_settings()
+    # print('gfo gso = ', settings.DB_HOST)
+    # print('gfo gso = =', settings.DB_NAME)
 
-    CurrModel_2 = UsableModel('', 'УльтраУбиватор-9000', '3.33', 'Еще более крутая и дорогая модель.',
-                            price = 2)
+    init_db(demostart = True)
+    print('Init db has been success')
+
+
+
+
+    update_Bill_operationsList(BillOperation(date = datetime.datetime.now(),
+                                            user_id=1,
+                                            operation='Что -то тестовое с чем то странным-1',
+                                            val= -2,
+                                            success=True), Session(engine))
+    update_Bill_operationsList(BillOperation(date = datetime.datetime.now(),
+                                            user_id=2,
+                                            operation='Что -то тестовое с чем то странным-2',
+                                            val= -1,
+                                            success=True), Session(engine))
+    update_Bill_operationsList(BillOperation(date = datetime.datetime.now(),
+                                            user_id=3,
+                                            operation='Что -то тестовое с чем то странным-3',
+                                            val= -10,
+                                            success=True), Session(engine))
     
-    # Для демонстрации сделаем выбор модели случайным образом
-    if bool(random.randint(0, 1)): CurrModel = CurrModel_1
-    else: CurrModel = CurrModel_2
-
-
-    # Создание пользователя
-    CurrentUser = User(name = 'dmagog',
-                    email = 'georgy-mamarin@mail.ru',
-                    role = 1,
-                    startbalance = 5,
-                    FreeLimitPerDay = 3)
-
-    print(CurrentUser)
-
 
     
-    for _ in range(0,5):
-        #Пользователь вызывает модель
-        CurrentUser.useModel(model = CurrModel, 
-                            payment = CurrModel.price)
 
-    
-    print()
-    print('Балланс = ', CurrentUser.billing.get_balance())
-    print('Бесплатных операций осталось = ', CurrentUser.billing.get_limits())
-    print('Последняя операция = ', CurrentUser.history.get_lastOperationDate())
-    print('Всего операций = ', CurrentUser.history.get_OperationAll())
-    print('Операций cегодня = ', CurrentUser.history.get_OperationToday())
+    for _ in range(1, 10):
+        model_id = random.randint(1,2)
+        user_id = random.randint(1,4)
+        useModel(model_id, user_id, Session(engine))
 
-    print()
-    print(CurrentUser.history.get())
 
-    print()
-    print(CurrentUser.billing.get_operations())
+    print('\n\nВывод истории операций пользоывателя')
+    print(get_Bill_operationsList(1, session = Session(engine)))
+
+    #print('\n\n2222 Вывод истории операций пользоывателя  222')
+    #print(get_Bill_operationsList_2(1, session = Session(engine)))
+
+  
+
+
+ 
