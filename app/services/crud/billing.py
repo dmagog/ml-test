@@ -5,7 +5,7 @@ from models.billing import *
 
 
 # Операция пополнения балланса    
-def update_bill_operationsList(new_operation: BillOperation, 
+def update_bill_operations_list(new_operation: BillOperation, 
                                session) -> bool:
     session.add(new_operation) # создали новую запись в истории операций
     session.commit() 
@@ -29,11 +29,11 @@ def update_bill_refund(id: int, payment: float, session) -> bool:
         session.commit() 
         session.refresh(upd_bill)
 
-    update_bill_operationsList(new_operation, session)    
+    update_bill_operations_list(new_operation, session)    
     return new_operation.success
 
 
-def update_bill_refillLimits(id: int, num: float, session) -> bool:
+def update_bill_refill_limits(id: int, num: float, session) -> bool:
     upd_bill = session.get(Bill, id) 
 
     new_operation = BillOperation(user_id = id, val = num, success = False,
@@ -50,7 +50,7 @@ def update_bill_refillLimits(id: int, num: float, session) -> bool:
         session.commit() 
         session.refresh(upd_bill)
 
-    update_bill_operationsList(new_operation, session)    
+    update_bill_operations_list(new_operation, session)    
     return new_operation.success
 
 
@@ -69,12 +69,12 @@ def update_bill_payment(id: int, payment: float, session) -> bool:
             session.commit() 
             session.refresh(upd_bill)
 
-    update_bill_operationsList(new_operation, session)    
+    update_bill_operations_list(new_operation, session)    
     return new_operation.success
 
 
 # Списание с копилки дневных лимитов
-def update_Bill_decLimits(id: int, num: float, session) -> bool:
+def update_bill_dec_limits(id: int, num: float, session) -> bool:
     upd_bill = session.get(Bill, id) 
 
     new_operation = BillOperation(user_id = id, val = num, success = False,
@@ -89,7 +89,7 @@ def update_Bill_decLimits(id: int, num: float, session) -> bool:
             session.commit() 
             session.refresh(upd_bill)
 
-    update_bill_operationsList(new_operation, session)    
+    update_bill_operations_list(new_operation, session)    
     return new_operation.success
 
 
@@ -100,10 +100,10 @@ def get_bill(id: int, session) -> Bill:
 
 
 # Получение истории операций по id пользователя
-def get_bill_operationsList(id: int, session) -> BillOperation:
+def get_bill_operations_list(id: int, session) -> BillOperation:
     return session.query(BillOperation).filter(BillOperation.user_id == id).all()
 
-def get_bill_operationsList_2(id: int, session):
+def get_bill_operations_list_2(id: int, session):
     statement = select(BillOperation).where(BillOperation.user_id == id)
     results = session.exec(statement)
 
@@ -120,7 +120,7 @@ def pay(id: int, payment: float, session) -> bool:
     # Если пользователь не исчерпал бесплатные операции на день - он ничего не платит
     # Если исчерпал - платит
     if upd_bill:
-        if update_Bill_decLimits(id, payment, session):
+        if update_bill_dec_limits(id, payment, session):
             new_operation.success = True
             new_operation.operation = 'Списание в счёт суточного лимита'
         elif update_bill_payment(id, payment, session):
@@ -129,5 +129,5 @@ def pay(id: int, payment: float, session) -> bool:
         else:
             new_operation.operation = 'Недостаточно средеств на счете' 
 
-    update_bill_operationsList(new_operation, session)    
+    update_bill_operations_list(new_operation, session)    
     return new_operation.success

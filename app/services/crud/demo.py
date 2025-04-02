@@ -23,7 +23,7 @@ def create_demo_user(session):
                 Bill(balance=20, freeLimit_perDay=5, freeLimit_today=5), session)
 
 
-def create_demo_operationsList(session):
+def create_demo_operations_list(session):
     for _ in range(0,10):
         user_id = random.randint(1,4)
         payment = random.randint(1,3)

@@ -25,17 +25,17 @@ if __name__ == "__main__":
 
 
 
-    update_bill_operationsList(BillOperation(date = datetime.datetime.now(),
+    update_bill_operations_list(BillOperation(date = datetime.datetime.now(),
                                             user_id=1,
                                             operation='Что -то тестовое с чем то странным-1',
                                             val= -2,
                                             success=True), Session(engine))
-    update_bill_operationsList(BillOperation(date = datetime.datetime.now(),
+    update_bill_operations_list(BillOperation(date = datetime.datetime.now(),
                                             user_id=2,
                                             operation='Что -то тестовое с чем то странным-2',
                                             val= -1,
                                             success=True), Session(engine))
-    update_bill_operationsList(BillOperation(date = datetime.datetime.now(),
+    update_bill_operations_list(BillOperation(date = datetime.datetime.now(),
                                             user_id=3,
                                             operation='Что -то тестовое с чем то странным-3',
                                             val= -10,
@@ -51,10 +51,10 @@ if __name__ == "__main__":
 
 
     print('\n\nВывод истории операций пользоывателя')
-    print(get_bill_operationsList(1, session = Session(engine)))
+    print(get_bill_operations_list(1, session = Session(engine)))
 
     #print('\n\n2222 Вывод истории операций пользоывателя  222')
-    #print(get_bill_operationsList_2(1, session = Session(engine)))
+    #print(get_bill_operations_list_2(1, session = Session(engine)))
 
   
 
