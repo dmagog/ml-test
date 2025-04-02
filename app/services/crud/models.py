@@ -26,7 +26,7 @@ def use_model(model_id, user_id, session):
             new_operation.success = True
 
     print('Обновляем историю платежей')
-    update_history_operationsList(new_operation, session)
+    update_history_operations_list(new_operation, session)
     return new_operation.success
 
 

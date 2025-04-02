@@ -17,5 +17,5 @@ def init_db(demostart = None):
     #Если инициализация базы происходит с созданием демо параметров
     if demostart:
         create_demo_user(Session(engine)) # Создадим демо юзеров
-        create_demo_operationsList(Session(engine)) # Прогоним случайные операции оплаты-пополнения
+        create_demo_operations_list(Session(engine)) # Прогоним случайные операции оплаты-пополнения
         create_demo_model(Session(engine))  #создадим тестовые модели
