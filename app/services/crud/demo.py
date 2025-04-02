@@ -29,7 +29,7 @@ def create_demo_operationsList(session):
         payment = random.randint(1,3)
         pay_or_refund = bool(random.random())
         if pay_or_refund: pay(user_id, payment, session)
-        else: update_Bill_refund(user_id, payment, session)
+        else: update_bill_refund(user_id, payment, session)
 
 
 

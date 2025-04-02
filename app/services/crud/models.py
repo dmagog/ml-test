@@ -12,7 +12,7 @@ def create_model(new_model: MLmodel,
 
 
 
-def useModel(model_id, user_id, session):
+def use_model(model_id, user_id, session):
     model = session.get(MLmodel, model_id) 
     
     new_operation = HistoryOperation(date = datetime.datetime.now(), user_id = user_id, success = False,
@@ -26,12 +26,12 @@ def useModel(model_id, user_id, session):
             new_operation.success = True
 
     print('Обновляем историю платежей')
-    update_History_operationsList(new_operation, session)
+    update_history_operationsList(new_operation, session)
     return new_operation.success
 
 
 
-#     def useModel(self, payment, model: MLmodel):
+#     def use_model(self, payment, model: MLmodel):
 #         #Процедура запуска модели, с проверкой возможности запуска, сохранением параметров и списания баланса
 #         ResultOperation = False # все плохо, если ничто это го не изменит
 
