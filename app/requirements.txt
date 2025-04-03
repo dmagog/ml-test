@@ -8,3 +8,5 @@ pydantic_settings
 #functools
 typing
 psycopg2-binary
+fastapi
+uvicorn
