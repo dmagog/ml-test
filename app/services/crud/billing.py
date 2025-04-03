@@ -100,10 +100,10 @@ def get_bill(id: int, session) -> Bill:
 
 
 # Получение истории операций по id пользователя
-def get_bill_operations_list(id: int, session) -> BillOperation:
+def get_bill_operations_list(id: int, session) : #-> List[BillOperation]
     return session.query(BillOperation).filter(BillOperation.user_id == id).all()
 
-def get_bill_operations_list_2(id: int, session):
+def get_bill_operations_list_2(id: int, session) -> List[BillOperation]:
     statement = select(BillOperation).where(BillOperation.user_id == id)
     results = session.exec(statement)
 
