@@ -4,7 +4,7 @@ from routes.user import user_route
 from routes.models import models_route
 from routes.billing import billing_route
 from routes.historyOperation import history_operations_route
-#from routes.event import event_router
+from routes.ml import ml_route
 from database.database import init_db
 import uvicorn
 
@@ -14,6 +14,7 @@ app.include_router(user_route, prefix='/user')
 app.include_router(billing_route, prefix='/billing')
 app.include_router(models_route, prefix='/models')
 app.include_router(history_operations_route, prefix='/history')
+app.include_router(ml_route, prefix='/api/ml', tags=['ML'])
 
 
 @app.on_event("startup") 

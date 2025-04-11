@@ -7,7 +7,7 @@ from typing import List
 models_route = APIRouter(tags=['Models'])
 
 
-@models_route.post("/{id}")
+@models_route.post("/{model_id}/{user_id}")
 async def use_model(model_id, user_id, session=Depends(get_session)) :
     new_use = ModelService.use_model(model_id, user_id, session)
     if new_use is None:
