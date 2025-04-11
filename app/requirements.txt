@@ -10,3 +10,6 @@ typing
 psycopg2-binary
 fastapi
 uvicorn
+pika
+setuptools
+
