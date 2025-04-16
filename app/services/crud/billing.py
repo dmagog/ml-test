@@ -95,8 +95,12 @@ def update_bill_dec_limits(id: int, num: float, session) -> bool:
 
 
 #Счет пользователя по id клиента
-def get_bill(id: int, session) -> Bill:
-    return session.get(Bill, id) 
+def get_bill(id: int, session) -> Optional[Bill]:
+    bill = session.get(Bill, id)
+    if bill:
+        return bill
+     
+    return None
 
 
 # Получение истории операций по id пользователя

@@ -1,0 +1,27 @@
+<h1>Личный кабинет</h1>
+<hr>
+{% include '_lk_map.html' %} 
+<hr>
+
+<p>Ты волшебник, {{ user.name }}!</p>
+
+<p>Добро пожаловать в твой личный кабинет пользователя. В нем будет все необходимое, чтобы пользоваться сервисом и повелевать миром, а еще <a href="/private/billing">твой счет</a> и <a href="/private/history">история операций</a>.</p>
+
+<h2>Это все про тебя:</h2>
+<div><b>id:</b> {{ user.id }}</div>
+<div><b>name:</b>  {{ user.name }}</div>
+<div><b>e-mail:</b> {{ user.email }}</div>
+<div><b>age:</b> {{ user.age }}</div>
+<div><b>regDate:</b> {{ user.regDate }}</div>
+</br>
+<div><b>balance:</b> {{ bill.balance }}</div>
+<div><b>freeLimit_today:</b> {{ bill.freeLimit_today }}</div>
+<div><b>freeLimit_perDay:</b> {{ bill.freeLimit_perDay }}</div>
+</br>
+
+
+<hr>
+{% include '_lk_map.html' %} 
+<hr>
+
+{% include '_site_map.html' %}

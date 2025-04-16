@@ -1,5 +1,6 @@
 from sqlmodel import SQLModel, Field, select
 from typing import Optional, List
+from auth.hash_password import HashPassword
 
 from models.user import *
 from services.crud.user import *
@@ -8,10 +9,12 @@ from services.crud.models import *
 import random
 
 def create_demo_user(session):
-    test_user = User(name = 'Harry', email='test@mail.ru', age=10, regDate = datetime.datetime.now(), role = 1)
-    test_user_2 = User(name = 'Ron', email='test@mail.ru', age=10, regDate = datetime.datetime.now(), role = 1)
-    test_user_3 = User(name = 'Hermione', email='test@mail.ru', age=10, regDate = datetime.datetime.now(), role = 1)
-    test_user_4 = User(name = 'Dumbledor', email='test@mail.ru', age=100, regDate = datetime.datetime.now(), role = 0)
+    hash_password = HashPassword()
+
+    test_user = User(name = 'Harry', email='test1@mail.ru', age=10, regDate = datetime.datetime.now(), role = 1, password=hash_password.create_hash("12345")) 
+    test_user_2 = User(name = 'Ron', email='test2@mail.ru', age=10, regDate = datetime.datetime.now(), role = 1, password=hash_password.create_hash("12345"))
+    test_user_3 = User(name = 'Hermione', email='test3@mail.ru', age=10, regDate = datetime.datetime.now(), role = 1, password=hash_password.create_hash("12345"))
+    test_user_4 = User(name = 'Dumbledor', email='test4@mail.ru', age=100, regDate = datetime.datetime.now(), role = 0, password=hash_password.create_hash("12345"))
 
     create_user(test_user, 
                 Bill(balance=10, freeLimit_perDay=3, freeLimit_today=3), session)
@@ -22,6 +25,7 @@ def create_demo_user(session):
     create_user(test_user_4, 
                 Bill(balance=20, freeLimit_perDay=5, freeLimit_today=5), session)
 
+    
 
 def create_demo_operations_list(session):
     for _ in range(0,10):

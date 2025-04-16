@@ -1,6 +1,7 @@
 from models.user import User
 from models.billing import *
 from typing import List, Optional
+from sqlmodel import Session, select
 
 def create_user(new_user: User, 
                 new_bill: Bill,
@@ -28,4 +29,28 @@ def get_user_by_email(email:str, session) -> Optional[User]:
     if user:
         return user 
     return None
+
+
+
+def delete_user(user_id: int, session: Session) -> bool:
+    """
+    Удалить пользователя по ID.
+    
+    Аргументы:
+        user_id: ID пользователя для удаления
+        session: Сессия базы данных
+    
+    Возвращает:
+        bool: True если удален, False если не найден
+    """
+    try:
+        user = get_user_by_id(user_id, session)
+        if user:
+            session.delete(user)
+            session.commit()
+            return True
+        return False
+    except Exception as e:
+        session.rollback()
+        raise
 
