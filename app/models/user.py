@@ -1,5 +1,5 @@
-from sqlmodel import SQLModel, Field 
-from typing import Optional, List
+from sqlmodel import SQLModel, Field, Relationship 
+from typing import Optional, List, TYPE_CHECKING
 
 import enum
 import numpy as np
@@ -9,6 +9,8 @@ import datetime
 from models.models import *
 from models.HistoryOperation import HistoryOperation
 
+if TYPE_CHECKING:
+    from models.mltask import MLTask
 
 class userRole(enum.IntEnum):
     superAdmin = 0
@@ -25,4 +27,9 @@ class User(SQLModel, table=True):
     age: int
     role: userRole = Field(default=1)
     regDate: datetime.datetime = Field(default=datetime.datetime.now())
+
+    ml_tasks: List["MLTask"] = Relationship(
+        back_populates="creator",
+        sa_relationship_kwargs={"lazy": "selectin"}
+    )
 
