@@ -8,3 +8,14 @@ pydantic_settings
 #functools
 typing
 psycopg2-binary
+fastapi
+uvicorn
+pika
+setuptools
+passlib
+python-jose
+Jinja2
+python-multipart
+pytest
+httpx
+jose

@@ -1,0 +1,30 @@
+<h1>Личный кабинет</h1>
+<hr>
+{% include '_lk_map.html' %} 
+<hr>
+
+<p>Это твои наработки, {{ user.name }}!</p>
+
+<p>Ты видишь, как много создал, используя волшебные алгоритмы моделей, у-у-у-у!</p>
+<div><b>Запустить модели: </b> 
+    <form action="/{{ model_id }}/{{ user.id }}" method="post">
+        <button type="submit", model_id = 1>Модель #1</button>
+        <button type="submit", model_id = 2>Модель #2</button>
+     </form>
+</div>
+
+<h3>История операций</h3>
+{% if history %}
+    {{ history }}
+{% else %} 
+    <div>Ты еще не сделал ничего плохого, {{ user.name }}... Что ты сидишь?!</div> 
+</br>
+{% endif %}    
+
+
+
+<hr>
+{% include '_lk_map.html' %} 
+<hr>
+
+{% include '_site_map.html' %}

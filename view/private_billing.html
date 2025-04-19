@@ -1,0 +1,47 @@
+<h1>Личный кабинет</h1>
+<hr>
+{% include '_lk_map.html' %} 
+<hr>
+
+<p>Это твой счёт, {{ user.name }}!</p>
+
+<p>Ты видишь, безграничность своих возможностей, выраженную в числах:</p>
+<div><b>balance:</b> {{ bill.balance }}</div>
+<div><b>freeLimit_today:</b> {{ bill.freeLimit_today }}</div>
+<div><b>freeLimit_perDay:</b> {{ bill.freeLimit_perDay }}</div>
+
+<div><b>Пополнить счёт: </b>
+    <form action="{{ url_for('bill_refund', user_id=user.id) }}" method="POST">
+        <button type="submit" name="payment" value="5">На 5!</button>
+        <button type="submit" name="payment" value="10">На 10!</button>
+        <button type="submit" name="payment" value="50">На 50!</button>
+        <button type="submit" name="payment" value="100">На 100!</button>
+    </form>
+</div>
+
+
+<h3>История операций</h3>
+{{ bill_operations_list_exist }}
+
+<!-- <hr>
+{% for i in bill_operations_list_exist %}
+<div class="col-4">
+    <div class="card">
+        <div class="card-body">
+            <span>{{ bill_operations_list_exist[i] }}  |  </span>
+            -
+            <h5 class="card-title">{{ bill_operations_list_exist.id }}</h5>
+            <h5 class="card-title">{{ bill_operations_list_exist[i].date }}</h5>
+            <h5 class="card-title">{{ bill_operations_list_exist[i].val }}</h5>
+            <h5 class="card-title">{{ bill_operations_list_exist[i].operation }}</h5>
+            <h5 class="card-title">{{ bill_operations_list_exist[i].success }}</h5>
+        </div>
+    </div>
+</div>
+{% endfor %} -->
+
+<hr>
+{% include '_lk_map.html' %} 
+<hr>
+
+{% include '_site_map.html' %}
