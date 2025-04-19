@@ -1,5 +1,6 @@
-from sqlmodel import SQLModel, Field 
-from typing import Optional, List
+from sqlmodel import SQLModel, Field, Relationship 
+from typing import Optional, List, TYPE_CHECKING
+import re
 
 import enum
 import numpy as np
@@ -9,8 +10,10 @@ import datetime
 from models.models import *
 from models.HistoryOperation import HistoryOperation
 
+if TYPE_CHECKING:
+    from models.mltask import MLTask
 
-class UserRole(enum.IntEnum):
+class userRole(enum.IntEnum):
     superAdmin = 0
     simpleUser = 1
     megaUser = 2
@@ -19,68 +22,45 @@ class UserRole(enum.IntEnum):
 
 class User(SQLModel, table=True):
     id: int = Field(default=None, primary_key=True)
-    name: str
-    email: str 
-    age: int
-    role: UserRole
-    regDate: datetime.datetime
+    name: Optional[str] = Field(default=None)
+    password: str = Field(
+        ..., 
+        min_length=4,
+        description="Хешированный пароль пользователя"
+    )    
+    email: str = Field(
+        ...,  # Обязательное поле
+        unique=True,
+        index=True,
+        min_length=5,
+        max_length=255,
+        description="Электронная почта пользователя"
+    )
+    age: Optional[int] = Field(default=None)
+    role: userRole = Field(default=1)
+    regDate: datetime.datetime = Field(default=datetime.datetime.now())
 
+    ml_tasks: List["MLTask"] = Relationship(
+        back_populates="creator",
+        sa_relationship_kwargs={"lazy": "selectin"}
+    )
 
+    def __str__(self) -> str:
+        """Строковое представление пользователя"""
+        return f"Id: {self.id}. Email: {self.email}"
 
-
-
-# class User:
-
-#     def __init__(self, name: str, email: str, role, startbalance: int, FreeLimitPerDay: int):
-#         self.name = name # имя пользователя
-#         self.email = email # электронный адрес для взаимодействия
-#         self.RegDate = datetime.datetime.now() # Дата-время регистрации
-#         self.role = UserRole(role) # Роль, по умолчанию "пользователь"
+    def validate_email(self) -> bool:
+        """
+        Проверка формата электронной почты.
         
-#         self.billing = Billing(startbalance, FreeLimitPerDay) # Баланс пользователя в деньгах и свободных лимитах
-
-#         self.history = HistoryOperation() # история операций пользователя
-
-
-#     def useModel(self, payment, model: MLmodel):
-#         #Процедура запуска модели, с проверкой возможности запуска, сохранением параметров и списания баланса
-#         ResultOperation = False # все плохо, если ничто это го не изменит
-
-#         if self.billing.pay(payment):
-#             # Если платеж прошел или мы можем провести операцию бесплатно в рамках лимита
-#             model.run()
-#             self.history.update(Date = datetime.datetime.now(),
-#                                 Operation = 'Запуск модели',
-#                                 Success = model.StatusOperation)
-
-#             if not model.StatusOperation:
-#                 # Если запуск модели был неудачный, нужно вернуть оплату 
-#                 # Если операция шла за счет бесплатных, то вернем клиенту это деньгами (надеюсь, нас не обонкротят :О))
-#                 self.billing.refund(payment)
-#             else:
-#                 ResultOperation = True
-
-#         return ResultOperation
-
-
-
-
-
-# # Функция вывода профиля пользователя
-# def showUserDetails(CurrentUser):
-#     print('Имя пользователя = ', CurrentUser.name)
-#     print('Эл. почта = ', CurrentUser.email)
-#     print('Дата регистрации = ', CurrentUser.RegDate)
-#     print('Роль = ', CurrentUser.role)
-#     print('Бесплатных операций в день = ', CurrentUser.billing.get_limits())
-
-#     print()
-#     print('Балланс = ', CurrentUser.billing.get_balance())
-#     print('Бесплатных операций осталось = ', CurrentUser.billing.get_limits())
-#     print('Последняя операция = ', CurrentUser.history.get_lastOperationDate())
-#     print('Всего операций = ', CurrentUser.history.get_OperationAll())
-#     print('Операций cегодня = ', CurrentUser.history.get_OperationToday())
-
-
-#     print()
-#     print('Иницализация = ', CurrentUser.history.get_Initiation())
+        Возвращает:
+            bool: True если формат верный
+        
+        Вызывает:
+            ValueError: Если формат электронной почты неверный
+        """
+        pattern = re.compile(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$')
+        if not pattern.match(self.email):
+            raise ValueError("Неверный формат электронной почты")
+        return True
+    
