@@ -1,5 +1,6 @@
 from sqlmodel import SQLModel, Field, Relationship 
 from typing import Optional, List, TYPE_CHECKING
+import re
 
 import enum
 import numpy as np
@@ -33,3 +34,22 @@ class User(SQLModel, table=True):
         sa_relationship_kwargs={"lazy": "selectin"}
     )
 
+    def __str__(self) -> str:
+        """Строковое представление пользователя"""
+        return f"Id: {self.id}. Email: {self.email}"
+
+    def validate_email(self) -> bool:
+        """
+        Проверка формата электронной почты.
+        
+        Возвращает:
+            bool: True если формат верный
+        
+        Вызывает:
+            ValueError: Если формат электронной почты неверный
+        """
+        pattern = re.compile(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$')
+        if not pattern.match(self.email):
+            raise ValueError("Неверный формат электронной почты")
+        return True
+    

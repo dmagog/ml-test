@@ -12,4 +12,8 @@ fastapi
 uvicorn
 pika
 setuptools
+passlib
+python-jose
+Jinja2
+python-multipart
 
