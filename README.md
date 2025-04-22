@@ -93,7 +93,7 @@ test4@mail.ru
 ## 🧪 Тестирование
 
 ```bash
-pytest
+PYTHONPATH=. pytest tests/<test_name>.py
 ```
 
 ---
