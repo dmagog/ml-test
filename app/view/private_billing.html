@@ -1,48 +1,69 @@
-<h1>Личный кабинет</h1>
-<hr>
+<head>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" href="/static/styles.css">
+</head>
+
+<h1 class="lk-title">Личный кабинет</h1>
 {% include '_lk_map.html' %} 
-<hr>
 
-<p>Это твой счёт, {{ user.name }}!</p>
 
-<p>Ты видишь, безграничность своих возможностей, выраженную в числах:</p>
-<div><b>balance:</b> {{ bill.balance }}</div>
-<div><b>freeLimit_today:</b> {{ bill.freeLimit_today }}</div>
-<div><b>freeLimit_perDay:</b> {{ bill.freeLimit_perDay }}</div>
-<div><b>Пополнить счёт на: </b> 
-    <a href = '{{ url_for('bill_refund', id = user.id, payment = 5) }}'>5</a>  |  
-    <a href = '{{ url_for('bill_refund', id = user.id, payment = 10) }}'>10</a>  |  
-    <a href = '{{ url_for('bill_refund', id = user.id, payment = 50) }}'>50</a>  |  
-    <a href = '{{ url_for('bill_refund', id = user.id, payment = 100) }}'>100</a>
-    <!-- <form action="/{{ user.id }}/refund/{{ payment }}" method="POST">
-        <button type="submit", payment = 5>На 5!</button>
-        <button type="submit", payment = 10>На 10!</button>
-        <button type="submit", payment = 50>На 50!</button>
-        <button type="submit", payment = 100>На 100!</button>
-     </form> -->
-</div>
-<h3>История операций</h3>
-{{ bill_operations_list_exist }}
 
-<!-- <hr>
-{% for i in bill_operations_list_exist %}
-<div class="col-4">
-    <div class="card">
-        <div class="card-body">
-            <span>{{ bill_operations_list_exist[i] }}  |  </span>
-            -
-            <h5 class="card-title">{{ bill_operations_list_exist.id }}</h5>
-            <h5 class="card-title">{{ bill_operations_list_exist[i].date }}</h5>
-            <h5 class="card-title">{{ bill_operations_list_exist[i].val }}</h5>
-            <h5 class="card-title">{{ bill_operations_list_exist[i].operation }}</h5>
-            <h5 class="card-title">{{ bill_operations_list_exist[i].success }}</h5>
-        </div>
+<div class="account-summary">
+  <div class="greeting-block">
+    <h1>Это твой счёт, {{ user.name }}! 👋</h1>
+    <p class="greeting-subtitle">Ты видишь, безграничность своих возможностей, выраженную в числах</p>
+  </div>
+  <div class="balance-card">
+    <div class="balance-item">
+        <span class="label">💰 Баланс:</span>
+        <span class="value">{{ bill.balance }}</span>
+    </div>
+    <div class="balance-item">
+        <span class="label">📅 Лимит на сегодня:</span>
+        <span class="value">{{ bill.freeLimit_today }}</span>
+    </div>
+    <div class="balance-item">
+        <span class="label">🗓️ Общий дневной лимит:</span>
+        <span class="value">{{ bill.freeLimit_perDay }}</span>
     </div>
 </div>
-{% endfor %} -->
 
-<hr>
+  <div class="topup-section">
+    <form action="{{ url_for('bill_refund', user_id=user.id) }}" method="POST" class="topup-form">
+        <label class="topup-label">Пополнить счёт:</label>
+        <div class="topup-buttons">
+            <input type="hidden" name="redir" value="/private/billing" class="refund-input" required>
+            <button type="submit" name="payment" value="5">+5</button>
+            <button type="submit" name="payment" value="10">+10</button>
+            <button type="submit" name="payment" value="50">+50</button>
+            <button type="submit" name="payment" value="100">+100</button>
+        </div>
+    </form>
+  </div>
+</div>
+
+
+<div class="table-container">
+  <h2 >История операций</h2>
+  <table class="history-table">
+      <tr>
+        <th>ID</th>
+        <th>Дата</th>
+        <th>Операция</th>
+        <th>Сумма</th>
+        <th>Успешность</th>
+      </tr>
+      {% for op in bill_operations_list_exist %}
+      <tr class="{{ 'success' if op.success else 'fail' }}">
+        <td data-label="ID">{{ op.id }}</td>
+        <td data-label="Дата">{{ op.date }}</td>
+        <td data-label="Операция">{{ op.operation }}</td>
+        <td data-label="User ID">{{ op.val }}</td>
+        <td data-label="Статус">{{ '✅' if op.success else '❌' }}</td>
+      </tr>
+      {% endfor %}
+  </table>
+</div>
+
 {% include '_lk_map.html' %} 
-<hr>
-
 {% include '_site_map.html' %}

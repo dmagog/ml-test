@@ -65,3 +65,6 @@ class MLTaskUpdate(MLTaskBase):
     """DTO для обновления существующей ML задачи"""
     status: Optional[TaskStatus] = None
     result: Optional[str] = None
+
+
+

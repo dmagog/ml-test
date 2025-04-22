@@ -1,4 +1,4 @@
-from fastapi import APIRouter, HTTPException, status, Depends
+from fastapi import APIRouter, HTTPException, status, Depends, Form
 from fastapi.security import OAuth2PasswordRequestForm
 from database.database import get_session
 from models.user import User
@@ -8,6 +8,7 @@ from typing import List, Dict
 from services.logging.logging import get_logger
 from auth.hash_password import HashPassword
 from auth.jwt_handler import create_access_token
+from fastapi.responses import RedirectResponse
 
 logger = get_logger(logger_name=__name__)
 
@@ -127,3 +128,24 @@ async def get_all_users(session=Depends(get_session)) -> List[User]:
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="Error retrieving users"
         )
+    
+
+
+@user_route.post("/upscale_role") 
+async def upscale_user_role(user_id: int = Form(...), session=Depends(get_session)):
+    user = UserService.get_user_by_id(user_id, session)
+    if user:
+        UserService.promote_user_role(user, session)
+        #return user
+        return RedirectResponse(url="/private/admin", status_code=303)
+    
+@user_route.post("/delete_user") 
+def delete_user_by_id(user_id: int = Form(...), session=Depends(get_session)):
+    try:   
+        result = UserService.delete_user(user_id, session)
+        if result:
+            return RedirectResponse(url="/private/admin", status_code=303)
+    except Exception as e:
+        session.rollback()
+        raise
+    

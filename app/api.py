@@ -10,6 +10,8 @@ from routes.ml import ml_route
 from database.database import init_db
 from database.config import get_settings
 from services.logging.logging import get_logger
+from fastapi.staticfiles import StaticFiles
+from fastapi.templating import Jinja2Templates
 import uvicorn
 
 
@@ -43,6 +45,9 @@ def create_application() -> FastAPI:
         allow_headers=["*"],
     )
 
+    # Монтируем папку static
+    #app.mount("/static", StaticFiles(directory="/static"), name="static")
+
     # Регистрация маршрутов
     app.include_router(home_route, tags=['Home'])
     app.include_router(auth_route, prefix='/auth', tags=['Auth'])
@@ -55,7 +60,7 @@ def create_application() -> FastAPI:
     return app
 
 app = create_application()
-
+app.mount("/static", StaticFiles(directory="static"), name="static")
 
 
 @app.on_event("startup") 

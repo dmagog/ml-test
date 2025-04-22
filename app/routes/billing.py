@@ -1,8 +1,10 @@
-from fastapi import APIRouter, HTTPException, status, Depends
+from fastapi import APIRouter, HTTPException, status, Depends, Form
+from fastapi.responses import RedirectResponse
 from database.database import get_session
 from models.billing import *
 from services.crud import billing as BillService
 from typing import List
+
 
 billing_route = APIRouter(tags=['Billing'])
 
@@ -27,14 +29,21 @@ async def get_bill_operations_list(id: int, session=Depends(get_session)) -> Lis
 
 
 
-@billing_route.post('/{id}/refund/{payment}')
-async def bill_refund(id:int, payment:float, session=Depends(get_session)):
-    if BillService.update_bill_refund(id, payment, session) is None:
+# @billing_route.post('/{id}/refund/{payment}')
+# async def bill_refund(id:int, payment:float, session=Depends(get_session)):
+#     if BillService.update_bill_refund(id, payment, session) is None:
+#         raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail="Cannot refund bill for this User ID")
+
+#     return {"message": f"Bill for user {id} successfully refund on {payment}!"}
+
+@billing_route.post("/{user_id}/refund")
+async def bill_refund(user_id: int, payment: int = Form(...), redir: str = Form(...), session=Depends(get_session)):
+    
+    if BillService.update_bill_refund(user_id, payment, session) is None:
         raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail="Cannot refund bill for this User ID")
+    return RedirectResponse(url=redir, status_code=303)
 
-    return {"message": f"Bill for user {id} successfully refund on {payment}!"}
-
-
+#{"message": f"Bill for user {user_id} successfully refund on {payment}!"}
 
 @billing_route.post('/{id}/refill_limits/{payment}')
 async def bill_refill_limits(id:int, payment:float, session=Depends(get_session)):

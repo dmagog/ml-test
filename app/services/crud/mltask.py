@@ -23,6 +23,11 @@ class MLTaskService:
     def get(self, task_id: int) -> Optional[MLTask]:
         """Получает задачу по ID"""
         return self.session.get(MLTask, task_id)
+    
+    def get_by_user_id(self, user_id: int) -> list[MLTask]:
+        # statement = select(MLTask).where(MLTask.user_id == user_id)
+        return self.session.query(MLTask).filter(MLTask.user_id == user_id).all()
+    
 
     def get_all(self, skip: int = 0, limit: int = 100) -> List[MLTask]:
         """Получает список всех задач с пагинацией"""

@@ -1,0 +1,44 @@
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="/static/styles.css">
+    <link rel="stylesheet" href="/static/register.css">
+</head>
+
+<h1 class="login-title">Регистрация 👤</h1>
+
+{% for error in errors %}
+    <p class="form-error">{{ error }}</p>
+{% endfor %}
+
+<form class="login-form" action="/auth/register" method="post">
+    <div class="form-group">
+        <label for="name">Имя</label>
+        <input type="text" id="name" name="name" value="{{ name }}" required title="Пожалуйста, введите имя">
+    </div>
+
+    <div class="form-row">
+        <div class="form-group">
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" value="{{ email }}" required title="Введите корректный email">
+        </div>
+
+        <div class="form-group">
+            <label for="password">Пароль</label>
+            <input type="password" id="password" name="password" value="{{ password }}" required title="Введите пароль">
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label for="age">Возраст</label>
+        <input type="number" id="age" name="age" value="{{ age }}" min="1" max="120" required title="Укажите возраст">
+    </div>
+
+    <button type="submit" class="btn-primary">Зарегистрироваться</button>
+
+    <p class="form-note">
+        Уже есть аккаунт?
+        <a href="/auth/login">Войти</a>
+    </p>
+</form>
+
+{% include '_site_map.html' %}

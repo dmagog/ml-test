@@ -1,0 +1,100 @@
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="/static/admin.css">
+    <link rel="stylesheet" href="/static/styles.css">
+    <link rel="stylesheet" href="/static/rating.css">
+    <link rel="stylesheet" href="/static/generate_buttons.css">
+    <link rel="stylesheet" href="/static/register.css">
+    
+  </head>
+
+<h1 class="lk-title">Админка</h1>
+
+{% include '_lk_map.html' %} 
+
+<div class="lk-welcome">
+    <p class="lk-greeting">Ты <span class="admin-role">олдскульный одмэн</span>, {{ user.name }}! 🧙</p>
+    <p class="lk-desc">
+        Добро пожаловать в твой персональный штаб, откуда ты можешь вершить судьбы обычных юзверей! (...и конечно же повелевать миром 💫)
+        
+    </p>
+</div>
+
+<div class="admin-panel">
+  <h1 class="page-title">📋 Список пользователей</h1>
+
+  <div class="admin-table-wrapper">
+    <table class="styled-table">
+      <thead>
+        <tr>
+          <th title="🆔 пользователя">🆔</th>
+          <th title="🧑 Имя пользователя">🧑&nbsp;Имя</th>
+          <!-- <th title="📧 email регистрации">📧</th> -->
+          <th title="🎂 Возраст ">🎂</th>
+          <th title="🛡️ Роль">Роль</th>
+          <th title="🕓 Дата регистрации">🕓 Дата регистрации</th>
+          <th title="💰 Баланс">💰</th>
+          <th title="⏳ Лимит бесплатных операций на сегодня">⏳</th>
+          <th title="📆 Лимит бесплатных операций в сутки">📆</th>
+          <th title="✨ Генераций">✨</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for man in allusers_exist %}
+        <tr class="{% if man.role.name == 'superAdmin' %}admin-row{% endif %}">
+          <td>{{ man.id }}</td>
+          <td>{{ man.name }}</td>
+          <!-- <td>{{ man.email }}</td> -->
+          <td>{{ man.age }}</td>
+          <td>
+            {% if man.role.name == 'superAdmin' %}
+              🛡️&nbsp;Админ
+            {% else %}
+              👤&nbsp;Юзер
+            {% endif %}
+          </td>
+          <td>{{ man.regDate.strftime('%Y-%m-%d %H:%M') }}</td>
+          <td>{{ man.balance }}</td>
+          <td>{{ man.freeLimit_today }}</td>
+          <td>{{ man.freeLimit_perDay }}</td>
+          <td>{{ man.operations_count }}</td>
+          <td>
+            {% if man.id != user.id %}
+            <div class="user-action-row">
+              <form action="{{ url_for('bill_refund', user_id=man.id)  }}" method="post" class="inline-form refund-form">
+                <input type="hidden" name="payment" value="5" class="refund-input" required>
+                <input type="hidden" name="redir" value="/private/admin" class="refund-input" required>
+                <button type="submit" class="btn-small btn-refund" title="Пополнить баланс">➕💰</button>
+              </form>
+            
+              <form action="{{ url_for('upscale_user_role') }}" method="POST" class="topup-form" onsubmit="return confirm('Вы уверены, что хотите изменить роль этого пользователя?');">
+                <input type="hidden" name="user_id" value="{{ man.id }}">
+                {% if man.role.name == 'superAdmin' %}
+                  <button type="submit" class="btn-small" title="Снять роль админа">➖🛡️</button>
+                {% else %}
+                  <button type="submit" class="btn-small" title="Назначить роль админа">➕🛡️</button>
+                {% endif %}
+              </form>
+            
+              <form action="{{ url_for('delete_user_by_id') }}" method="post" class="inline-form" onsubmit="return confirm('Вы уверены, что хотите удалить этого пользователя?');">
+                <input type="hidden" name="user_id" value="{{ man.id }}">
+                <button type="submit" class="btn-small btn-delete" title="Удалить пользователя">❌</button>
+              </form>
+            </div>
+            
+            {% endif %}  
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+  
+  
+
+
+{% include '_lk_map.html' %} 
+
+{% include '_site_map.html' %}
