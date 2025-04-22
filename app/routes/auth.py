@@ -6,7 +6,7 @@ from auth.authenticate import authenticate_cookie, authenticate
 from auth.hash_password import HashPassword
 from auth.jwt_handler import create_access_token
 from database.database import get_session
-from services.auth.loginform import LoginForm
+from services.auth.loginform import LoginForm, RegisterForm
 from services.crud import user as UsersService
 from database.config import get_settings
 from typing import Dict
@@ -123,3 +123,56 @@ async def login_get():
     response = RedirectResponse(url="/")
     response.delete_cookie(settings.COOKIE_NAME)
     return response
+
+
+
+@auth_route.get("/register", response_class=HTMLResponse)
+async def register_get(request: Request):
+    """
+    Отображает страницу входа.
+
+    Args:
+        request (Request): Объект HTTP-запроса
+
+    Returns:
+        TemplateResponse: HTML-страница с формой входа
+    """
+    # Передаем объект запроса в шаблон
+    context = {
+        "request": request,
+    }
+    return templates.TemplateResponse("register.html", context)
+
+
+
+
+@auth_route.post("/register", response_class=HTMLResponse)
+async def register_post(request: Request, session=Depends(get_session)):
+    """
+    Обрабатывает отправку формы входа.
+
+    Args:
+        request (Request): Объект HTTP-запроса
+        session (Session): Сессия базы данных
+
+    Returns:
+        Response: Перенаправление на главную страницу при успехе
+        или HTML-страница с ошибками при неудаче
+    """
+    # Создаем и валидируем форму входа
+    form = RegisterForm(request)
+    await form.load_data()
+    if await form.is_valid():
+        try:
+            # При успешной валидации перенаправляем на главную
+            response = RedirectResponse("/", status.HTTP_302_FOUND)
+            await login_for_access_token(response=response, form_data=form, session=session)
+            form.__dict__.update(msg="Registrer Successful!")
+            print("[green]Lerister successful!")
+            return response
+        except HTTPException:
+            # При ошибке аутентификации показываем сообщение об ошибке
+            form.__dict__.update(msg="")
+            form.__dict__.get("errors").append("Incorrect Email or Password")
+            return templates.TemplateResponse("login.html", form.__dict__)
+    return templates.TemplateResponse("login.html", form.__dict__)

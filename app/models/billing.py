@@ -15,7 +15,7 @@ class Bill(SQLModel, table=True):
 
 class BillOperation(SQLModel, table=True):
     id: int = Field(default=None, primary_key=True)
-    date: datetime.datetime = Field(default=datetime.datetime.now()) # Название операции
+    date: datetime.datetime = Field(default=datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")) # Название операции
     user_id: int # идентификатор клиента, который совершил операцию
     operation: str # Название операции
     val: float # Значение операции

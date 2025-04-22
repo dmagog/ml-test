@@ -2,9 +2,11 @@
 <html lang="en">
 <head>
     {% block head %}
-    <link rel="stylesheet" href="style.css" />
-    <title>{% block title %}{% endblock %} - My Webpage</title>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="/static/styles.css">
+    <link rel="stylesheet" href="/static/register.css">
     {% endblock %}
+
 </head>
 <body>
     <div id="content">{% block content %}{% endblock %}</div>

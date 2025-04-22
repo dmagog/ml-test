@@ -12,3 +12,4 @@ class MLmodel(SQLModel, table=True):
     description: str
     price: float
 
+

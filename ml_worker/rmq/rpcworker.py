@@ -2,6 +2,7 @@ import pika
 import time
 import logging
 from rmq.rmqconf import RabbitMQConfig
+from llm import do_task
 from typing import Optional
 from pika.adapters.blocking_connection import BlockingChannel
 from pika.spec import Basic, BasicProperties
@@ -80,8 +81,10 @@ class RPCWorker:
         Возвращает:
             str: Обработанный текст
         """
-        return '[RESULT] Просто офигенский результат работы модели, который так понравится пользователю, что прям вах!'
-
+        #return '[RESULT] Просто офигенский результат работы модели, который так понравится пользователю, что прям вах!'
+        return do_task(text)
+    
+    
     def on_request(self, ch: BlockingChannel, method: Basic.Deliver,
                   props: BasicProperties, body: bytes) -> None:
         """

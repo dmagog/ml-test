@@ -1,0 +1,245 @@
+  /* Стиль для выделения роли админа */
+.admin-panel {
+    max-width: 960px;
+    margin: 40px auto;
+    padding: 24px;
+    background-color: #fdfdfd;
+    border-radius: 16px;
+    box-shadow: 0 0 12px rgba(0, 0, 0, 0.05);
+}
+
+.page-title {
+    text-align: center;
+    font-size: 2rem;
+    margin-bottom: 24px;
+}
+
+.admin-table-wrapper {
+    overflow-x: auto;
+    }
+
+.styled-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.95rem;
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.styled-table thead {
+    background-color: #f3f4f6;
+}
+
+.styled-table th, .styled-table td {
+    padding: 12px 16px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+.styled-table tr:nth-child(even) {
+    background-color: #f9fafb;
+}
+
+.styled-table tr:hover {
+    background-color: #f1f5f9;
+}
+
+.admin-row {
+    background-color: #fff4ec !important;
+    font-weight: bold;
+    color: #b45309;
+}
+
+
+.admin-label {
+    color: #ffffff; /* Белый цвет текста */
+    background-color: #ff6f61; /* Ярко-оранжевый фон */
+    padding: 0.2rem 0.5rem;
+    border-radius: 0.5rem;
+    font-weight: bold;
+    font-size: 1rem;
+    margin-left: 0.5rem;
+}
+
+.admin-panel {
+    max-width: 960px;
+    margin: 40px auto;
+    padding: 24px;
+    background-color: #fdfdfd;
+    border-radius: 16px;
+    box-shadow: 0 0 12px rgba(0, 0, 0, 0.05);
+  }
+  
+.page-title {
+    text-align: center;
+    font-size: 2rem;
+    margin-bottom: 24px;
+}
+
+.admin-table-wrapper {
+    overflow-x: auto;   
+    }
+
+.styled-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.95rem;
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.styled-table thead {
+    background-color: #f3f4f6;
+}
+
+.styled-table th, .styled-table td {
+    padding: 12px 16px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+.styled-table tr:nth-child(even) {
+    background-color: #f9fafb;
+}
+
+.styled-table tr:hover {
+    background-color: #f1f5f9;
+}
+
+.admin-row {
+    background-color: #fff4ec !important;
+    font-weight: bold;
+    color: #b45309;
+}
+
+.btn-upscale {
+    background-color: #e0e7ff;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1.1rem;
+    transition: background-color 0.3s;
+}
+
+.btn-upscale:hover {
+    background-color: #c7d2fe;
+}
+
+.role-badge {
+    display: inline-block;
+    background-color: #a5b4fc;
+    color: white;
+    font-size: 0.9rem;
+    padding: 3px 8px;
+    border-radius: 10px;
+}
+ 
+.btn-small {
+    padding: 4px 10px;
+    background-color: transparent;
+    color: #4b91f1;
+    border: 1.5px solid #4b91f1;
+    border-radius: 6px;
+    font-size: 0.9em;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+  
+  .btn-small:hover {
+    background-color: #eaf2ff;
+    border-color: #336fd1;
+    color: #336fd1;
+  }
+  
+  .btn-small:disabled {
+    color: #aaa;
+    border-color: #ccc;
+    background-color: transparent;
+    cursor: not-allowed;
+  }
+
+  .btn-delete {
+    color: #e74c3c;
+    border-color: #e74c3c;
+  }
+  
+  .btn-delete:hover {
+    background-color: #fcebea;
+    color: #c0392b;
+    border-color: #c0392b;
+  }
+  
+  .btn-refund {
+    color: #1e7a3c;
+    border: 1px solid #1e7a3c;
+    background-color: transparent;
+    padding: 4px 8px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+  
+  .btn-refund:hover {
+    background-color: #d8f3df;
+    color: #1e7a3c;
+    border-color: #1e7a3c;
+  }
+  
+  .refund-input {
+    width: 55px;
+    padding: 4px 6px;
+    font-size: 0.9em;
+    border: 1px solid #b6dec1;
+    border-radius: 6px;
+    background-color: #f3fbf5;
+    color: #2c3e50;
+  }
+  
+  .refund-input:focus {
+    outline: none;
+    border-color: #7cbf96;
+    background-color: #edf8f0;
+  }
+    
+  
+  .user-action-row {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    justify-content: flex-start;
+  }
+  
+  .user-action-row form {
+    margin: 0;
+  }
+  
+  .user-action-row button,
+  .user-action-row input {
+    vertical-align: middle;
+  }
+
+  .admin-role {
+    display: inline-block;
+    margin-left: 6px;
+    padding: 2px 8px;
+    background-color: #ffe4b5; /* мягкий светло-оранжевый */
+    color: #a84300; /* насыщенный коричнево-рыжий */
+    font-weight: bold;
+    font-size: 0.85rem;
+    border: 1px solid #ffbb73;
+    border-radius: 12px;
+    font-family: 'Comic Sans MS', cursive, sans-serif;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+    text-decoration: none; /* убираем подчёркивание */
+    transition: background-color 0.2s ease, box-shadow 0.2s ease;
+  }
+  
+  .admin-role:hover {
+    background-color: #ffcf91;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+    cursor: pointer;
+  }
+  
+  

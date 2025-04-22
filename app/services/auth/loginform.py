@@ -41,3 +41,51 @@ class LoginForm:
             self.errors.append("Требуется указать пароль")
 
         return len(self.errors) == 0
+    
+
+
+
+class RegisterForm:
+    """Класс для обработки формы авторизации.
+    
+    Отвечает за валидацию данных формы входа пользователя,
+    включая проверку email и пароля.
+    """
+    
+    def __init__(self, request: Request):
+        """
+        Инициализация формы логина.
+        
+        Args:
+            request (Request): Объект запроса FastAPI
+        """
+        self.request: Request = request
+        self.errors: List[str] = []  # Уточняем тип списка для ошибок
+        self.username: Optional[str] = None
+        self.password: Optional[str] = None
+        self.email: Optional[str] = None
+        self.age: Optional[int] = None
+
+    async def load_data(self) -> None:
+        """Загружает данные из формы запроса."""
+        form = await self.request.form()
+        self.username = form.get("username")
+        self.email = form.get("email")
+        self.password = form.get("password")
+        self.age = form.get("age")
+
+    async def is_valid(self) -> bool:
+        """Проверяет валидность введенных данных.
+        
+        Returns:
+            bool: True если данные валидны, False если есть ошибки
+        """
+        # Проверка email
+        if not self.email or '@' not in self.email:
+            self.errors.append("Требуется указать корректный email")
+        
+        # Проверка пароля
+        if not self.password or len(self.password) < 4:
+            self.errors.append("Требуется указать пароль")
+
+        return len(self.errors) == 0

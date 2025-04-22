@@ -2,9 +2,22 @@
 This code snippet will appear in each file, so to avoid re-writing it we define 
 it only once here. 
 -->
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="/static/styles.css">
+    <link rel="stylesheet" href="/static/register.css">
+  </head>
 
-<a href="/">Home</a> | 
-<a href="/auth/login">Login</a> |
-<a href="/private">Private</a> |
-<a href="/auth/logout">Logout</a>
-</br>&copy; Copyright 2025
+<footer class="footer">
+    <nav class="footer-nav">
+        <a href="/">🏠 Главная</a>
+        <a href="/top">🏆 Рейтинг</a>
+        {% if not user %} <a href="/auth/login">🔐 Авторизация</a> {% endif %}
+        {% if user %} {% if user.role == 0 %} <a href="/private/admin">⚙️ Админка</a> {% endif %} {% endif %}
+        {% if user %} <a href="/private">👤 Личный кабинет</a> {% endif %}
+        {% if user %} <a href="/auth/logout">🚷 Logout</a> {% endif %}
+    </nav>
+    <div class="footer-copy">
+        &copy; Copyright 2025
+    </div>
+</footer>

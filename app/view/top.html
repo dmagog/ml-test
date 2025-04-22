@@ -1,0 +1,59 @@
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="/static/styles.css">
+    <link rel="stylesheet" href="/static/rating.css">
+    <link rel="stylesheet" href="/static/generate_buttons.css">
+    <link rel="stylesheet" href="/static/register.css">
+  </head>
+
+{% if user%}
+  <h1 class="lk-title">Личный кабинет</h1>
+  {% include '_lk_map.html' %} 
+{% else %}
+  <h1 class="login-title">Топ пользователей</h1>
+{% endif %}
+
+<div class="rating-container">
+    <h1>Рейтинг пользователей</h1>
+
+    <table class="rating-table">
+        <thead>
+            <tr>
+                <th>Место</th>
+                <th>Имя</th>
+                <th>Возраст</th>
+                <th>Успешных генераций</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for summary in summary %}
+                <tr class="{% if summary.user_id == user.id %}highlight-row{% endif %}">
+                    <td>{{ summary.ranking }}</td> <!-- Позиция пользователя в рейтинге -->
+                    <td>{{ summary.name }}</td>
+                    <td>{{ summary.age }}</td>
+                    <td>{{ summary.successful_operations }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <!-- Новый блок с сообщением -->
+    <div class="competition-info-wrapper">
+        {% if not user %}
+            <div class="competition-info">
+                <p class="message">Чтобы принять участие в соревновании, <a href="/auth/login" class="btn-primary"> авторизуйся</a>.</p>
+            </div>
+        {% else %}
+            <div class="competition-info">
+                <p class="message">Ты уже в игре! Чтобы продолжить соревнование - перейди в <a href="/private/history">Историю операций</a> и продолжай!</p>
+            </div>
+        {% endif %}
+    </div>
+</div>
+
+
+{% if user%}
+  {% include '_lk_map.html' %} 
+{% endif %}
+
+{% include '_site_map.html' %}

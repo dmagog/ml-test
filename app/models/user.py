@@ -8,6 +8,7 @@ import pandas as pd
 import datetime
 
 from models.models import *
+from models.billing import Bill
 from models.HistoryOperation import HistoryOperation
 
 if TYPE_CHECKING:
@@ -22,10 +23,21 @@ class userRole(enum.IntEnum):
 
 class User(SQLModel, table=True):
     id: int = Field(default=None, primary_key=True)
-    name: str
-    password: str = Field(default='12345')
-    email: str 
-    age: int
+    name: Optional[str] = Field(default=None)
+    password: str = Field(
+        ..., 
+        min_length=4,
+        description="Хешированный пароль пользователя"
+    )    
+    email: str = Field(
+        ...,  # Обязательное поле
+        unique=True,
+        index=True,
+        min_length=5,
+        max_length=255,
+        description="Электронная почта пользователя"
+    )
+    age: Optional[int] = Field(default=None)
     role: userRole = Field(default=1)
     regDate: datetime.datetime = Field(default=datetime.datetime.now())
 

@@ -49,6 +49,12 @@ def create_demo_model(session):
                         version = '3.33', 
                         description = 'Еще более крутая и дорогая модель.',
                         price = 2)
+    new_model_3 = MLmodel(model='',
+                        name = 'МегаУбиватор-9900', 
+                        version = '2.93', 
+                        description = '"nj ghjcnj ybxtuj ct,t".',
+                        price = 1.5)
     
     create_model(new_model_1, session)
     create_model(new_model_2, session)
+    create_model(new_model_3, session)

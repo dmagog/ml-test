@@ -1,0 +1,39 @@
+button:disabled {
+    background-color: #e5e7eb; /* светло-серый */
+    color: #9ca3af;            /* серый текст */
+    cursor: not-allowed;
+    box-shadow: none;
+    border: 1px solid #d1d5db;
+    opacity: 0.7;
+    transition: none;
+  }
+  
+
+button:disabled:hover {
+    background-color: #e5e7eb;
+    color: #9ca3af;
+  }
+
+  .generation-result {
+    max-width: 800px;
+    margin: 2.5rem auto 3rem auto; /* сверху и снизу — отступы, по бокам — авто */
+    padding: 2rem;
+    background-color: #f9f9f9;
+    border-left: 6px solid #c4b5fd;
+    border-radius: 0.75rem;
+    font-size: 1.5rem;
+    font-weight: 400;
+    color: #3f3f46;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+    font-family: 'Comic Sans MS', 'Comic Sans', cursive;
+    line-height: 1.7;
+  }
+  
+  .generation-result h2 {
+    margin-top: 0;
+    margin-bottom: 0.75rem;
+    font-size: 2rem;
+    color: #6d28d9;
+    font-family: 'Comic Sans MS', 'Comic Sans', cursive;
+  }
+  

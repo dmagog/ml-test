@@ -1,0 +1,95 @@
+.rating-container {
+    max-width: 1200px; /* Фиксированная максимальная ширина */
+    margin: 3rem auto; /* Центрируем блок с отступами сверху и снизу */
+    padding: 2rem;
+    background-color: #f9f9f9; /* Светлый фон */
+    border-radius: 1rem;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+}
+
+.rating-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 2rem;
+    border-radius: 0.75rem;
+    background-color: #ffffff;
+}
+
+.rating-table th, .rating-table td {
+    padding: 12px 20px;
+    text-align: center;
+    border: 1px solid #ddd;
+    font-size: 1rem;
+    color: #3f3f46; /* Тёмный цвет текста */
+}
+
+.rating-table th {
+    background-color: #6d28d9; /* Используем насыщенный фиолетовый */
+    color: white;
+    font-size: 1.1rem;
+    font-weight: bold;
+}
+
+.rating-table tr:nth-child(even) {
+    background-color: #f4f4f4; /* Светло-серые строки для чёткого контраста */
+}
+
+.rating-table tr:hover {
+    background-color: #ddd; /* Легкий серый оттенок при наведении */
+}
+
+/* Стиль для строки, соответствующей текущему пользователю */
+.highlight-row {
+    background-color: #ffd700; /* Золотой фон для выделенной строки */
+    font-weight: bold; /* Жирный шрифт для выделения */
+    color: #ffffff; /* Белый текст */
+}
+
+.competition-info {
+    margin-top: 2rem;
+    padding: 1.5rem;
+    background-color: #f3f4f6; /* Светлый серо-голубой фон */
+    border: 1px solid #e1e7ec; /* Легкая граница */
+    border-radius: 8px;
+    text-align: center;
+    font-size: 1.1rem;
+    color: #3f4f5e; /* Мягкий темно-серый цвет для текста */
+}
+
+.competition-info a {
+    color: #4f6d7a; /* Пастельный фиолетовый оттенок для ссылок */
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.competition-info a:hover {
+    text-decoration: underline;
+    color: #3c4d60; /* Немного темнее цвет при наведении */
+}
+
+.rating-container {
+    max-width: 1200px;
+    margin: 3rem auto;
+    padding: 2rem;
+    background-color: #ffffff;
+    border-radius: 1rem;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+}
+
+/* Стили для кнопки авторизации */
+.btn-primary {
+    display: inline-block;
+    background-color: #4f6d7a; /* Пастельный фиолетовый */
+    color: #ffffff; /* Белый цвет текста */
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-weight: bold;
+    text-decoration: none;
+    transition: background-color 0.3s ease;
+}
+
+.btn-primary:hover {
+    background-color: #3c4d60; /* Немного темнее при наведении */
+}
+
+

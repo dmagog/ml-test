@@ -11,6 +11,11 @@ class Settings(BaseSettings):
     COOKIE_NAME: Optional[str] = None # Название cookie
     SECRET_KEY: Optional[str] = None  # Секретный ключ
     
+    # RABBITMQ_HOST: Optional[str] = None 
+    # RABBITMQ_PORT: Optional[int] = None 
+    RABBITMQ_USER: Optional[str] = None 
+    RABBITMQ_PASS: Optional[str] = None 
+
     # Настройки приложения
     APP_NAME: Optional[str] = 'My app'        # Название приложения
     APP_DESCRIPTION: Optional[str] = 'Very best app' # Описание приложения

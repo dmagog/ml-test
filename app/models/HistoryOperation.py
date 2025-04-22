@@ -11,4 +11,5 @@ class HistoryOperation(SQLModel, table=True):
     date: datetime.datetime = Field(default=datetime.datetime.now()) 
     user_id: int
     operation: str
+    generation: str
     success: bool

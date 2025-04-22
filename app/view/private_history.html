@@ -1,30 +1,76 @@
-<h1>Личный кабинет</h1>
-<hr>
+<head>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" href="/static/styles.css">
+  <link rel="stylesheet" href="/static/generate_buttons.css">
+</head>
+
+<h1 class="lk-title">Личный кабинет</h1>
 {% include '_lk_map.html' %} 
-<hr>
 
-<p>Это твои наработки, {{ user.name }}!</p>
+<div class="account-summary">
+  <div class="greeting-block">
+    <h1>Это твои наработки, {{ user.name }}!</h1>
+    <p class="greeting-subtitle">Ты видишь, как много создал, используя волшебные алгоритмы моделей, у-у-у-у!</p>
+  </div>
 
-<p>Ты видишь, как много создал, используя волшебные алгоритмы моделей, у-у-у-у!</p>
-<div><b>Запустить модели: </b> 
-    <form action="/{{ model_id} }/{{ user.id }}" method="post">
-        <button type="submit", model_id = 1>Модель #1</button>
-        <button type="submit", model_id = 2>Модель #2</button>
-     </form>
+  <div class="balance-card">
+
+    {% if bill.balance < 1 %}
+    <div class="balance-warning">
+      <h3>⚠ Недостаточно средств</h3>
+      <p>Чтобы продолжить пользоваться сервисом, пополни баланс.</p>
+      <a href="/private/billing" class="btn-primary">Пополнить счёт</a>
+    </div>
+    {% endif %}
+
+    <div class="topup-section">
+      <form action="{{ url_for('send_task_rpc_button', user_id=user.id) }}" method="POST">
+        <label class="topup-label">Сочинить анекдот:</label>
+        <div class="topup-buttons">
+          <button type="submit" name="model_id" value="1" {% if bill.balance < 1 %}disabled title="⚠ Недостаточно средств на балансе"{% endif %}>про Чапаева</button>
+          <button type="submit" name="model_id" value="2" {% if bill.balance < 2 %}disabled title="⚠ Недостаточно средств на балансе"{% endif %}>про Штирлица</button>
+          <button type="submit" name="model_id" value="3" {% if bill.balance < 1.5 %}disabled title="⚠ Недостаточно средств на балансе"{% endif %}>про Гарри Поттера</button>
+        </div>  
+      </form>
+    </div>
+  </div>
 </div>
 
-<h3>История операций</h3>
-{% if history %}
-    {{ history }}
-{% else %} 
-    <div>Ты еще не сделал ничего плохого, {{ user.name }}... Что ты сидишь?!</div> 
-</br>
-{% endif %}    
+{% if last_generation %}
+  <div class="generation-result">
+    <p>{{ last_generation }}</p>
+  </div>
+{% endif %}
 
 
+<div class="table-container">
+  <h2>История операций</h2>
+  {% if history %}
+    <table class="history-table">
+        <tr>
+          <th>ID</th>
+          <th>Дата</th>
+          <th>Операция</th>
+          <th>Генерация</th>
+          <th>Успешность</th>
+        </tr>
+        {% for op in history %}
+        <tr class="{{ 'success' if op.success else 'fail' }}">
+          <td data-label="ID">{{ op.id }}</td>
+          <td data-label="Дата">{{ op.date }}</td>
+          <td data-label="Операция">{{ op.operation }}</td>
+          <td data-label="Генерация">{{ op.generation }}</td>
+          <td data-label="Статус">{{ '✅' if op.success else '❌' }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+ 
+  {% else %} 
+      <div class="italic-centered"><i>Ты еще не сделал ничего плохого, {{ user.name }}... Что ты сидишь?!</i></div> 
+  </br>
+  {% endif %}    
+</div> 
 
-<hr>
+
 {% include '_lk_map.html' %} 
-<hr>
-
 {% include '_site_map.html' %}

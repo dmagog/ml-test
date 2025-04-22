@@ -1,27 +1,38 @@
-<h1>Личный кабинет</h1>
-<hr>
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="/static/styles.css">
+    <link rel="stylesheet" href="/static/admin.css">
+  </head>
+  <h1 class="lk-title">Личный кабинет</h1>
+
+  {% include '_lk_map.html' %} 
+  
+  <div class="lk-welcome">
+      <p class="lk-greeting">Ты волшебник, {{ user.name }}! 🧙</p>
+      <p class="lk-desc">
+          Добро пожаловать в твой личный кабинет. Здесь ты можешь управлять сервисом и повелевать миром 💫
+          А ещё — заглянуть в <a href="/private/billing" class="lk-link">твой счёт</a> и <a href="/private/history" class="lk-link">историю операций</a>.
+      </p>
+  </div>
+  
+  <div class="lk-info-grid">
+      <div class="lk-card">
+          <h3>👤 Твои данные</h3>
+          <div><b>ID:</b> {{ user.id }} {% if user.role == 0 %} <a href="/private/admin" class="admin-role" title="Перейти в админку">(одмэн!)</a> {% endif %}</div>
+          <div><b>Имя:</b> {{ user.name }}</div>
+          <div><b>E-mail:</b> {{ user.email }}</div>
+          <div><b>Возраст:</b> {{ user.age }}</div>
+          <div><b>Дата регистрации:</b> {{ user.regDate }}</div>
+      </div>
+  
+      <div class="lk-card">
+          <h3>💼 Финансы</h3>
+          <div><b>Баланс:</b> {{ bill.balance }}</div>
+          <div><b>Лимит сегодня:</b> {{ bill.freeLimit_today }}</div>
+          <div><b>Лимит в сутки:</b> {{ bill.freeLimit_perDay }}</div>
+      </div>
+  </div>
+
+
 {% include '_lk_map.html' %} 
-<hr>
-
-<p>Ты волшебник, {{ user.name }}!</p>
-
-<p>Добро пожаловать в твой личный кабинет пользователя. В нем будет все необходимое, чтобы пользоваться сервисом и повелевать миром, а еще <a href="/private/billing">твой счет</a> и <a href="/private/history">история операций</a>.</p>
-
-<h2>Это все про тебя:</h2>
-<div><b>id:</b> {{ user.id }}</div>
-<div><b>name:</b>  {{ user.name }}</div>
-<div><b>e-mail:</b> {{ user.email }}</div>
-<div><b>age:</b> {{ user.age }}</div>
-<div><b>regDate:</b> {{ user.regDate }}</div>
-</br>
-<div><b>balance:</b> {{ bill.balance }}</div>
-<div><b>freeLimit_today:</b> {{ bill.freeLimit_today }}</div>
-<div><b>freeLimit_perDay:</b> {{ bill.freeLimit_perDay }}</div>
-</br>
-
-
-<hr>
-{% include '_lk_map.html' %} 
-<hr>
-
 {% include '_site_map.html' %}

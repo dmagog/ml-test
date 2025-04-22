@@ -1,20 +1,27 @@
-<h1>АВТОРИЗАЦИЯ</h1>
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="/static/styles.css">
+  </head>
 
-{% for error in errors %}
-    <p style="color: red">{{ error }}</p>
-{% endfor %}
-<form action="/auth/login" method="post">
-    <p>
-        <p><label for="">Email</label></p>
-        <input type="email" name="username" value="{{ username }}" required>
-    </p>
-    <p>
-        <p><label for="">Password</label></p>
-        <input type="password" name="password" value="{{ password }}" required>
-    </p>
-    <input type="submit" value="Submit">
-</form>
+  <h1 class="login-title">Авторизация 🔐</h1>
 
-<hr>
+  {% for error in errors %}
+      <p class="form-error">{{ error }}</p>
+  {% endfor %}
+  
+  <form class="login-form" action="/auth/login" method="post">
+      <div class="form-group">
+          <label for="username">Email</label>
+          <input type="email" id="username" name="username" value="{{ username }}" required>
+      </div>
+  
+      <div class="form-group">
+          <label for="password">Пароль</label>
+          <input type="password" id="password" name="password" value="{{ password }}" required>
+      </div>
+  
+      <button type="submit" class="btn-primary">Войти</button>
+  </form>
+  
 
 {% include '_site_map.html' %}

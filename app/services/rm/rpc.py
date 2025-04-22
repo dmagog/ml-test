@@ -6,6 +6,8 @@ import logging
 from functools import wraps
 from services.rm.rmqconf import RabbitMQConfig
 
+REQUEST_TIMEOUT = 60  # seconds
+
 # Устанавливаем уровень WARNING для логов pika
 logging.getLogger('pika').setLevel(logging.INFO)
 
@@ -96,7 +98,7 @@ class RpcClient:
             self.response = body.decode()
 
     @retry_connection()
-    def call(self, text: str, timeout: float = 10.0) -> str:
+    def call(self, text: str, timeout: float = REQUEST_TIMEOUT) -> str:
         """Выполнить RPC вызов с переданным текстом.
         
         Args:
