@@ -49,7 +49,7 @@
 
 ```bash
 # Клонируем проект
-git clone https://github.com/dmagog/ml-service.git
+git clone https://github.com/dmagog/ml-test.git
 cd ml-service
 
 # Устанавливаем зависимости
