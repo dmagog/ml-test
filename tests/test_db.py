@@ -1,7 +1,40 @@
 from sqlmodel import Session 
 from models.user import User
+from services.crud.user import *
 from models.billing import Bill, BillOperation
 import pytest
+
+
+
+def test_create_user(session: Session):
+    # Создаем тестовые данные
+    test_user = User(
+        id=1,
+        name="Test User",
+        password="securepassword",
+        email="test@example.com",
+        age=30
+    )
+    test_bill = Bill(
+        id=1,
+        balance=100,
+        freeLimit_today= 3,
+        freeLimit_perDay= 3,
+    )
+
+    # Вызываем функцию
+    create_user(test_user, test_bill, session)
+
+    # Проверяем, что пользователь и счет добавлены
+    user_from_db = session.get(User, 1)
+    bill_from_db = session.get(Bill, 1)
+
+    assert user_from_db is not None
+    assert bill_from_db is not None
+    assert user_from_db.name == "Test User"
+    assert bill_from_db.balance == 100    
+
+
 
 def test_create_user_correct(session: Session):
     """осздание валидного юзера"""
@@ -22,7 +55,6 @@ def test_create_user_incorrect(session: Session):
 def test_create_user_repeate_email(session: Session):
     """осздание не валидного юзера - недостаток данных
     """
-    #with pytest.raises(Exception) as ex:
     user = User(name='Elvis', email="elvis@mail.ru", password="12345", age=10)
     session.add(user)
     session.commit()           
@@ -45,7 +77,6 @@ def test_update_bill_refund(session: Session):
         session.commit() 
         session.refresh(upd_bill)
 
-    assert True
 
 
 def update_bill_refill_limits(session: Session):
@@ -67,7 +98,6 @@ def update_bill_refill_limits(session: Session):
         session.commit() 
         session.refresh(upd_bill)
 
-    assert True
 
 
 
@@ -88,7 +118,6 @@ def test_update_bill_payment(session: Session):
             session.commit() 
             session.refresh(upd_bill)
 
-    assert True
 
 
 # Списание с копилки дневных лимитов
@@ -109,7 +138,6 @@ def test_update_bill_dec_limits(session: Session):
             session.commit() 
             session.refresh(upd_bill)
 
-    assert True
 
 
 #Списание средств с баланса
