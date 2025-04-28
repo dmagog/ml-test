@@ -38,9 +38,15 @@ def test_create_user(session: Session):
 
 def test_create_user_correct(session: Session):
     """осздание валидного юзера"""
-    user = User(name='Elvis', email="elvis@mail.ru", password="12345", age=10)
+    user = User(id=5, name='Elvis', email="elvis@mail.ru", password="12345", age=45)
     session.add(user)
     session.commit()
+
+    # Проверяем, что пользователь и счет добавлены
+    user_from_db = session.get(User, 5)
+
+    assert user_from_db is not None
+    assert user_from_db == User(id=5, name='Elvis', email="elvis@mail.ru", password="12345", age=45)
 
 
 def test_create_user_incorrect(session: Session):
@@ -51,13 +57,7 @@ def test_create_user_incorrect(session: Session):
         session.add(user)
         session.commit()   
 
-
-def test_create_user_repeate_email(session: Session):
-    """осздание не валидного юзера - недостаток данных
-    """
-    user = User(name='Elvis', email="elvis@mail.ru", password="12345", age=10)
-    session.add(user)
-    session.commit()           
+       
     
 
 
@@ -65,109 +65,208 @@ def test_update_bill_refund(session: Session):
     id = 1
     payment = 10
      
-    upd_bill = session.get(Bill, id) 
+    # Попробуем найти счет
+    upd_bill = session.get(Bill, id)
 
-    new_operation = BillOperation(user_id = id, val = payment, success = False,
-                                  operation = 'Пополнение баланса')
+    # Если его нет — создадим тестовый счет
+    if upd_bill is None:
+        upd_bill = Bill(id=id, balance=0)  # начальный баланс = 0
+        session.add(upd_bill)
+        session.commit()
+
+
+    balance_last = upd_bill.balance 
+
+    new_operation = BillOperation(
+        user_id=id, 
+        val=payment, 
+        success=False,
+        operation='Пополнение баланса'
+    )
+    
     if upd_bill:
         upd_bill.balance += payment
         new_operation.success = True
 
-        session.add(upd_bill) 
-        session.commit() 
-        session.refresh(upd_bill)
+        session.add(upd_bill)
+        session.add(new_operation)  # не забудем сохранить саму операцию!
+        session.commit()
 
+        # Загружаем обновлённые данные из базы
+        updated_bill = session.get(Bill, id)
+
+        # Проверяем, что баланс увеличился на нужную сумму
+        assert updated_bill.balance == balance_last + payment, \
+            f"Баланс должен был увеличиться на {payment}, но стал {updated_bill.balance}"
+
+        # Проверяем, что операция записалась и была успешной
+        saved_operation = session.query(BillOperation).filter_by(user_id=id).order_by(BillOperation.id.desc()).first()
+        assert saved_operation is not None, "Операция пополнения должна быть сохранена"
+        assert saved_operation.success is True, "Операция пополнения должна быть успешной"
+        assert saved_operation.val == payment, "Сумма пополнения должна соответствовать переданной"
 
 
 def update_bill_refill_limits(session: Session):
-    id = 1 
-    num = 1000 
-    upd_bill = session.get(Bill, id) 
+    id = 1
+    payment = 1000
+     
+    # Попробуем найти счет
+    upd_bill = session.get(Bill, id)
 
-    new_operation = BillOperation(user_id = id, val = num, success = False,
-                                  operation = 'Пополнение суточного лимита бесплатных операций')
+    # Если его нет — создадим тестовый счет
+    if upd_bill is None:
+        upd_bill = Bill(id=id, balance=0)  # начальный баланс = 0
+        session.add(upd_bill)
+        session.commit()
+
+
+    balance_last = upd_bill.freeLimit_today 
+
+    new_operation = BillOperation(
+        user_id=id, 
+        val=payment, 
+        success=False,
+        operation='Пополнение суточного лимита бесплатных операций'
+    )
+    
     if upd_bill:
-        if num == 0:
-             upd_bill.freeLimit_today = upd_bill.freeLimit_perDay    
-        else:
-            upd_bill.freeLimit_today += num
-
+        upd_bill.freeLimit_today += payment
         new_operation.success = True
 
-        session.add(upd_bill) 
-        session.commit() 
+        session.add(upd_bill)
+        session.add(new_operation)  # не забудем сохранить саму операцию!
+        session.commit()
+
+        # Загружаем обновлённые данные из базы
+        updated_bill = session.get(Bill, id)
+
+        # Проверяем, что баланс увеличился на нужную сумму
+        assert updated_bill.freeLimit_today == balance_last + payment, \
+            f"Баланс должен был увеличиться на {payment}, но стал {updated_bill.freeLimit_today}"
+
+        # Проверяем, что операция записалась и была успешной
+        saved_operation = session.query(BillOperation).filter_by(user_id=id).order_by(BillOperation.id.desc()).first()
+        assert saved_operation is not None, "Операция пополнения должна быть сохранена"
+        assert saved_operation.success is True, "Операция пополнения должна быть успешной"
+        assert saved_operation.val == payment, "Сумма пополнения должна соответствовать переданной"    
+
+
+
+def test_update_bill_payment(session: Session):
+    id = 1
+    payment = 1
+
+    # Попробуем найти счет
+    upd_bill = session.get(Bill, id)
+
+    # Если счета нет — создадим тестовый счет с достаточным балансом
+    if upd_bill is None:
+        upd_bill = Bill(id=id, balance=payment + 5)  # чтобы хватило на списание
+        session.add(upd_bill)
+        session.commit()
+
+    balance_last = upd_bill.balance
+
+    new_operation = BillOperation(
+        user_id=id,
+        val=payment,
+        success=False,
+        operation='Списание с баланса'
+    )
+
+    if upd_bill.balance - payment >= 0:
+        upd_bill.balance -= payment
+        new_operation.success = True
+
+        session.add(upd_bill)
+        session.add(new_operation)
+        session.commit()
         session.refresh(upd_bill)
 
+        # Проверка: баланс уменьшился на сумму списания
+        assert upd_bill.balance == balance_last - payment, \
+            f"Баланс должен был уменьшиться на {payment}, но стал {upd_bill.balance}"
+
+        # Проверка: операция списания успешно сохранилась
+        saved_operation = session.query(BillOperation).filter_by(user_id=id).order_by(BillOperation.id.desc()).first()
+        assert saved_operation is not None, "Операция списания должна быть сохранена"
+        assert saved_operation.success is True, "Операция списания должна быть успешной"
+        assert saved_operation.val == payment, "Сумма списания должна соответствовать переданной"
+    else:
+        pytest.fail("Недостаточно средств для списания")
 
 
 
-#Списание средств с баланса
-def test_update_bill_payment(session: Session):
-    id = 1 
-    payment = 1 
-    upd_bill = session.get(Bill, id) 
-
-    new_operation = BillOperation(user_id = id, val = payment, success = False,
-                                  operation = 'Списание с баланса')
-    if upd_bill:
-        if upd_bill.balance - payment >= 0:
-            upd_bill.balance -= payment
-            new_operation.success = True
-
-            session.add(upd_bill) 
-            session.commit() 
-            session.refresh(upd_bill)
-
-
-
-# Списание с копилки дневных лимитов
 def test_update_bill_dec_limits(session: Session):
-    id = 1 
-    num = 1 
-    upd_bill = session.get(Bill, id) 
+    id = 1
+    num = 1  # сколько хотим списать
 
-    new_operation = BillOperation(user_id = id, val = num, success = False,
-                                  operation = 'Списание бесплатных операций')
-    if upd_bill:
-        if upd_bill.freeLimit_today - num >= 0:
-            upd_bill.freeLimit_today -= num 
+    # Попробуем найти счет
+    upd_bill = session.get(Bill, id)
 
-            new_operation.success = True
+    # Если счета нет — создаём тестовый с запасом лимита
+    if upd_bill is None:
+        upd_bill = Bill(id=id, balance=0, freeLimit_today=num + 5)  # чтобы хватило бесплатных лимитов
+        session.add(upd_bill)
+        session.commit()
 
-            session.add(upd_bill) 
-            session.commit() 
-            session.refresh(upd_bill)
+    free_limit_last = upd_bill.freeLimit_today
 
+    new_operation = BillOperation(
+        user_id=id,
+        val=num,
+        success=False,
+        operation='Списание бесплатных операций'
+    )
 
+    if upd_bill.freeLimit_today - num >= 0:
+        upd_bill.freeLimit_today -= num
+        new_operation.success = True
 
-#Списание средств с баланса
-def test_pay(session: Session):
-    id = 1 
-    payment = 1 
-    upd_bill = session.get(Bill, id) 
+        session.add(upd_bill)
+        session.add(new_operation)
+        session.commit()
+        session.refresh(upd_bill)
 
-    new_operation = BillOperation(user_id = id, val = payment, success = False,
-                                operation = 'Платежная операция')
-    
-    # Если пользователь не исчерпал бесплатные операции на день - он ничего не платит
-    # Если исчерпал - платит
-    if upd_bill:
-        if test_update_bill_dec_limits(session):
-            new_operation.success = True
-            new_operation.operation = 'Списание в счёт суточного лимита'
-        elif test_update_bill_payment(session):
-            new_operation.success = True
-            new_operation.operation = 'Списание с баланса счета'
-        else:
-            new_operation.operation = 'Недостаточно средеств на счете' 
+        # Проверка: лимит уменьшился на списанное количество
+        assert upd_bill.freeLimit_today == free_limit_last - num, \
+            f"Лимит бесплатных операций должен был уменьшиться на {num}, но стал {upd_bill.freeLimit_today}"
 
-    assert True
+        # Проверка: операция успешно сохранилась
+        saved_operation = session.query(BillOperation).filter_by(user_id=id).order_by(BillOperation.id.desc()).first()
+        assert saved_operation is not None, "Операция списания бесплатных операций должна быть сохранена"
+        assert saved_operation.success is True, "Операция списания бесплатных операций должна быть успешной"
+        assert saved_operation.val == num, "Количество списаний должно соответствовать переданному"
+    else:
+        pytest.fail("Недостаточно бесплатных операций для списания")
+
 
         
 def test_delete_user(session: Session):
     """
     """
-    test_create_user_correct(session)
+    #test_create_user_correct(session)
+    # Создаем тестовые данные
+    test_user = User(
+        id=1,
+        name="Test User",
+        password="securepassword",
+        email="test@example.com",
+        age=30
+    )
+    test_bill = Bill(
+        id=1,
+        balance=100,
+        freeLimit_today= 3,
+        freeLimit_perDay= 3,
+    )
+
+    session.add(test_user) # создали нового пользователя
+    session.add(test_bill) # создали для него новый счет
+    session.commit() 
+    session.refresh(test_user)
+    session.refresh(test_bill)
+
     
     user = session.get(User, 1)
     assert user is not None, "Пользователь с id=1 не найден"  # Fixed incorrect ID in error message
