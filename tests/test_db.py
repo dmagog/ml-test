@@ -46,7 +46,10 @@ def test_create_user_correct(session: Session):
     user_from_db = session.get(User, 5)
 
     assert user_from_db is not None
-    assert user_from_db == User(id=5, name='Elvis', email="elvis@mail.ru", password="12345", age=45)
+    assert user_from_db.name == 'Elvis'
+    assert user_from_db.email == "elvis@mail.ru"
+    assert user_from_db.password == "12345"
+    assert user_from_db.age == 45
 
 
 def test_create_user_incorrect(session: Session):
@@ -106,7 +109,7 @@ def test_update_bill_refund(session: Session):
         assert saved_operation.val == payment, "Сумма пополнения должна соответствовать переданной"
 
 
-def update_bill_refill_limits(session: Session):
+def test_update_bill_refill_limits(session: Session):
     id = 1
     payment = 1000
      
